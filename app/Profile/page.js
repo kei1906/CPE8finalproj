@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [posting, setPosting] = useState(false);
   
   const [profile, setProfile] = useState({
+    id: "",
     full_name: "",
     student_number: "",
     email: "",
@@ -40,10 +41,20 @@ export default function ProfilePage() {
         
         if (data) {
           setProfile({
+            id: user.id,
             full_name: data.full_name || "LSPU Student",
-            student_number: data.student_number || "No ID Set",
+            student_number: data.student_number || "Not Set",
             email: data.email || user.email,
             avatar_url: data.avatar_url || ""
+          });
+        } else {
+          // If profile doesn't exist, set with auth user data
+          setProfile({
+            id: user.id,
+            full_name: user.user_metadata?.full_name || "LSPU Student",
+            student_number: user.user_metadata?.student_number || "Not Set",
+            email: user.email || "",
+            avatar_url: ""
           });
         }
       }
@@ -202,11 +213,20 @@ export default function ProfilePage() {
             <div className="inline-block text-orange-300 text-[10px] uppercase tracking-widest font-bold bg-orange-500/10 px-4 py-1.5 rounded-full border border-orange-500/20">
               Verified LSPU Account
             </div>
-            <div className="pt-2">
-              <p className="text-orange-300 font-mono text-sm tracking-[0.2em] uppercase font-semibold">
-                {profile.student_number}
-              </p>
-              <p className="text-orange-300/60 text-xs font-medium tracking-wide">
+            <div className="pt-4 space-y-3">
+              <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-3">
+                <p className="text-xs text-orange-400/60 uppercase tracking-widest font-semibold mb-1">Student ID</p>
+                <p className="text-orange-300 font-mono text-sm tracking-[0.2em] font-semibold">
+                  {profile.student_number}
+                </p>
+              </div>
+              <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-3">
+                <p className="text-xs text-orange-400/60 uppercase tracking-widest font-semibold mb-1">User ID</p>
+                <p className="text-orange-300 font-mono text-xs tracking-tighter font-semibold break-all">
+                  {profile.id}
+                </p>
+              </div>
+              <p className="text-orange-300/60 text-xs font-medium tracking-wide pt-2">
                 {profile.email}
               </p>
             </div>
